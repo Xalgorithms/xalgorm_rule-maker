@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Route, Switch } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import { Container, Menu } from 'semantic-ui-react';
+
+import { HomeView } from './views/home';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <Menu fixed='top'>
+          <Container>
+            <Menu.Item as={NavLink} active='true' to='/home' header>
+              Xalgo Author
+            </Menu.Item>
+          </Container>
+        </Menu>
+
+        <Container style={{ marginTop: '4em' }}>
+          <Switch>
+            <Route path='/home' component={ HomeView } />
+          </Switch>
+        </Container>
       </div>
     );
   }

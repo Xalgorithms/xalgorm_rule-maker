@@ -4,9 +4,9 @@ import { Route, Switch } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { Container, Menu } from 'semantic-ui-react';
 
-import withAuthentication from '../../components/Session/withAuthentication';
-import Home from '../../components/Home';
-import Login from '../../components/Login';
+import withAuthentication from '../Auth/withAuthentication';
+import Home from '../Home';
+import Login from '../Login';
 import * as routes from '../../constants/routes';
 import './index.css';
 

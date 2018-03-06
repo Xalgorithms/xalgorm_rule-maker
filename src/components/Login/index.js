@@ -29,9 +29,7 @@ class Login extends Component {
 
     return (
       <div>
-        <GoogleButton
-          onClick={this.onAuth}
-        >
+        <GoogleButton onClick={this.onAuth}>
           Login With Google
         </GoogleButton>
       </div>

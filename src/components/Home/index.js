@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect } from 'react-redux-firebase'
-import withAuthorization from '../Session/withAuthorization'
+import withAuthorization from '../Auth/withAuthorization'
 
 class Home extends Component {
   render() {

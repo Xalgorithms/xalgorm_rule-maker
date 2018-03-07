@@ -7,9 +7,6 @@ cache:
   - node_modules
 script: yarn build
 before_deploy:
-# - cd functions
-# - npm i
-# - cd ..
 - npm i -g eslint eslint-plugin-promise
 deploy:
   provider: firebase
@@ -17,7 +14,7 @@ deploy:
   project: xalgo-authoring-ui
   skip_cleanup: true
   token:
-    secure: N/jiRgmU8aertfABH8Kfgd1gQfyU3GGD6UK8pPUjJodvHFBScI+L6sh1oZFG4PbCeDmjmsGb8If+tVTLMgh/o6qeoaTLRHEeEHFWUFjeynj/tyWt8RiMpyyMjY4KlpGZ2L51AMFahOJC8ntTYYyaQLEMIqc7mT3+hbh/qsKe2RZC+/ZDZuskPp1oyQbnnFDlKqgsIXrKaZ7av14guS881ThLcNIfvtl7b5SOPjkxo2FnLRhvsljiJ493x8M+p+uRykN63+da7nabRQ9a0Elgm/wqcaiTJyd7i9iNrfLFADlBnlKOHLrwKGuYNr806FBPgvT8kn6O5iB01ZgdWX/ulx/Cs+bdbEuCURZhO141C7uZu5B282MujVjVhiBFU4oi8LsfszUjjsjQKspm70ctZp2cJyUWj83jn69kXTorXpmJFxLXyD1M+bB5QPI6EMMV2NvdDAoDvkcEOmXjNpVINWz29IY9SdN3jKG9aIP9UwMKQcFydmzQGufmu8Ohx02WMd1ZNjbEE2A0YuihdjT4zpL7xGFkyt5aRUQNMb5ZZgVeAbgaev+JLyRNMPTBkY3tF2J056Ak+BGIdXktIGdC+LY7pfOLcq6tcHZ01ORSTIRXsuHUjPn63fi28hyRLhCF9saRhddaJiJkh6+/8qAKSuD2iIwsIkUeehUKs9z8njE=
+    secure: gS9HneR4Z9pVdPw0Gg+X9J47YNW0A3Ud+Olbm7SabKpWOa8WzkZHCKxcOCbvRfZFKQ5M1ZANdpQj6Avgm42IAixTi80CVsX2z1OhOyT0RATKv+K8QbREdncuUirWg8uhM6xCu1CUdqijLylirnmKa01dC4hhX1iDPh1K1YUBKmp9t0KOqVmcitz1fgsjZ+fX+wjBbR0QhGRS/R5/2jiv3mZRS4XuSlWZrVUrOnEnLuDrKEbkhYngilSDsMuoDsZpRAvG+xCD4fCwyI+i1TzOD3ao1MX1mdZ3N75QJGBaKmh2L4YlSUGHAsAuHs074YpOSCAueO9og4Zz3Bwafe2zXRvzf/3Gb7bjuAoCP8DZTqiOtvZbJE3tn8sHplU9SO8w2YjdQPkhkek7d/jLYPy4KPVq8PB3LcouVxs2Ev1iJe9Rek1q6a8IUeAVYH1daYCr8HYs2lqSCPS2kS0obYUHJ9YJ3RfTpfZ7E4HL3BpfWhInXUWN5VJYakDfjpv5qUeq6Dmfrjj/srSdqNrqBtEXVnKwXaX6hucSbm97sK3OwW7TOKTzTkfBUBPsupcFoQrz3O3+W89zX52auyMlZ5o480b1R/KFmFtqPjD+lSJd8+U4VuSFTTUQxUHpU4MeoR28Us4/fKtGYWmeyTYdBOx28gknVwiG9J6ELbO8J56pAU8=
 notifications:
   slack:
     rooms:

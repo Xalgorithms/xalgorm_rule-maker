@@ -1,0 +1,1 @@
+export const PACKAGES_FETCHED = 'PACKAGES_FETCHED';

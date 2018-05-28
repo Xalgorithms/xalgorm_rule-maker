@@ -1,22 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 
-import App from './components/App';
-import registerServiceWorker from './registerServiceWorker';
-
+import 'typeface-roboto';
 import './index.css';
-import 'semantic-ui-css/semantic.min.css';
+import App from './App';
+
 import { configureStore } from './store';
+import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore();
 
-ReactDOM.render(
-  (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  ),
-  document.getElementById('root')
-);
+ReactDOM.render((
+  <Provider store={store}>
+    <App />
+  </Provider>
+), document.getElementById('root'));
+
 registerServiceWorker();

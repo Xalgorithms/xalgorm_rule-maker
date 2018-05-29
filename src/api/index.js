@@ -1,6 +1,6 @@
 // Copyright 2018 Hayk Pilosyan <hayk.pilos@gmail.com>
-// This file is part of Interlibr, a functional component of an
-// Internet of Rules (IoR).
+// This file is part of Xalgo Authoring UI, a functional component of an
+// Internet of Rules (IoR)
 // ACKNOWLEDGEMENTS
 // Funds: Xalgorithms Foundation
 // Collaborators: Don Kelly, Joseph Potvin and Bill Olders.
@@ -16,7 +16,7 @@
 
 import config from '../config';
 
-const { API } = config;
+const API = process.env.API || ;
 
 export function fetchPackages() {
   return fetch(`${API}/package`, {

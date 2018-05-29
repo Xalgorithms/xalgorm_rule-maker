@@ -14,12 +14,39 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import { combineReducers } from 'redux';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
-import packageReducer from './package';
+import Header from './components/Header';
+import Packages from './components/Packages';
 
-const rootReducer = combineReducers({
-  packages: packageReducer,
-});
+import './App.css';
 
-export default rootReducer;
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+};
+
+class App extends Component {
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.root}>
+        <Header />
+        <Paper>
+          <Packages />
+        </Paper>
+      </div>
+    );
+  }
+}
+
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(App);

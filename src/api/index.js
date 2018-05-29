@@ -14,12 +14,11 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import { combineReducers } from 'redux';
+const API = process.env.REACT_APP_API;
 
-import packageReducer from './package';
-
-const rootReducer = combineReducers({
-  packages: packageReducer,
-});
-
-export default rootReducer;
+export function fetchPackages() {
+  return fetch(`${API}/package`, {
+    method: 'GET',
+  })
+  .then(response => response.json())
+};

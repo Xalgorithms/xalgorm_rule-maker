@@ -14,12 +14,16 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import { combineReducers } from 'redux';
+import * as api from '../api';
+import * as types from '../constants/types';
 
-import packageReducer from './package';
-
-const rootReducer = combineReducers({
-  packages: packageReducer,
-});
-
-export default rootReducer;
+export function fetchPackages() {
+  return (dispatch) => {
+    api.fetchPackages().then((data) => {
+      dispatch({
+        type: types.PACKAGES_FETCHED,
+        data,
+      });
+    });
+  };
+};

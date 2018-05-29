@@ -14,12 +14,17 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import { combineReducers } from 'redux';
+import * as types from '../constants/types';
 
-import packageReducer from './package';
+const INITIAL_STATE = [];
 
-const rootReducer = combineReducers({
-  packages: packageReducer,
-});
+function packageReducer(state = INITIAL_STATE, action) {
+  switch (action.type) {
+    case types.PACKAGES_FETCHED: {
+      return [...action.data];
+    }
+    default: return state;
+  }
+}
 
-export default rootReducer;
+export default packageReducer;

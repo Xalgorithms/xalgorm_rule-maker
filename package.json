@@ -19,7 +19,7 @@
   },
   "scripts": {
     "commit": "git-cz",
-    "start": "react-scripts start",
+    "start": "REACT_APP_API=http://localhost:7777 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

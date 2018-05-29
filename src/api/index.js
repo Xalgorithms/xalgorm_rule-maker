@@ -14,9 +14,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import config from '../config';
-
-const API = process.env.API || ;
+const API = process.env.REACT_APP_API;
 
 export function fetchPackages() {
   return fetch(`${API}/package`, {

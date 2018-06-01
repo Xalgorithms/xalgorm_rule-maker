@@ -2,3 +2,7 @@
 	path = services/github
 	url = git@github.com:Xalgorithms/service-author-github.git
 	branch = master
+[submodule "libs/iltk"]
+	path = libs/iltk
+	url = git@github.com:Xalgorithms/lib-iltk-js.git
+	branch = master

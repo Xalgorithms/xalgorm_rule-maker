@@ -1,0 +1,4 @@
+[submodule "services/github"]
+	path = services/github
+	url = git@github.com:Xalgorithms/service-author-github.git
+	branch = master

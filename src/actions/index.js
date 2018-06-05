@@ -27,3 +27,25 @@ export function fetchPackages() {
     });
   };
 };
+
+export function fetchContents(path) {
+  return (dispatch) => {
+    api.fetchContents(path).then((data) => {
+      dispatch({
+        type: types.CONTENTS_FETCHED,
+        data,
+      });
+    });
+  };
+};
+
+export function storeContents(payload) {
+  return (dispatch) => {
+    api.storeContents(payload).then((data) => {
+      dispatch({
+        type: types.CONTENTS_STORED,
+        data,
+      });
+    });
+  };
+};

@@ -15,3 +15,5 @@
 // permissions and limitations under the License.
 
 export const PACKAGES_FETCHED = 'PACKAGES_FETCHED';
+export const CONTENTS_FETCHED = 'CONTENTS_FETCHED';
+export const CONTENTS_STORED = 'CONTENTS_STORED';

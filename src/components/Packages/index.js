@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
@@ -58,6 +59,10 @@ const styles = theme => ({
 });
 
 class Packages extends Component {
+  constructor(props) {
+    super(props);
+    this.onFileClick = this.onFileClick.bind(this);
+  }
   render() {
     const { packages, classes } = this.props;
 
@@ -68,7 +73,7 @@ class Packages extends Component {
             <GridListTile key={i}>
               <List component="nav">
                 {p.files.map((f, i) => (
-                  <ListItem button key={i}>
+                  <ListItem button key={i} onClick={(e) => this.onFileClick(f.path)}>
                     <ListItemIcon>
                       <FileCopyIcon />
                     </ListItemIcon>
@@ -96,12 +101,18 @@ class Packages extends Component {
   componentDidMount() {
     this.props.fetchPackages();
   }
+
+  onFileClick(path) {
+    const { history } = this.props;
+    history.push(`/file?path=${path}`)
+  }
 }
 
 Packages.propTypes = {
   fetchPackages: PropTypes.func.isRequired,
   packages: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -112,11 +123,12 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPackages: (url) => dispatch(fetchPackages())
+    fetchPackages: () => dispatch(fetchPackages())
   };
 };
 
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
 )(Packages);

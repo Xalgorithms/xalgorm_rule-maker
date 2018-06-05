@@ -18,9 +18,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { BrowserRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
 
 import Header from './components/Header';
 import Packages from './components/Packages';
+import PackageFile from './components/PackageFile';
 
 import './App.css';
 
@@ -38,7 +41,12 @@ class App extends Component {
       <div className={classes.root}>
         <Header />
         <Paper>
-          <Packages />
+          <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <Switch>
+              <Route path={"/"} exact component={ Packages } />
+              <Route path={"/file"} component={ PackageFile } />
+            </Switch>
+          </BrowserRouter>
         </Paper>
       </div>
     );

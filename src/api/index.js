@@ -22,3 +22,25 @@ export function fetchPackages() {
   })
   .then(response => response.json())
 };
+
+export function fetchContents(path) {
+  return fetch(`${API}/contents?path=${path}`, {
+    method: 'GET',
+  })
+  .then(response => response.json())
+};
+
+export function storeContents(payload) {
+  return fetch(`${API}/contents`, {
+    method: 'POST',
+    body: JSON.stringify({
+      payload
+    }),
+    headers:{
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+};
+
+

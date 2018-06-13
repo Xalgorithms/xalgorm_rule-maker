@@ -19,18 +19,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router'
 import PropTypes from 'prop-types';
-import CodeMirrorInstance from 'codemirror';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
 import Button from '@material-ui/core/Button';
-import 'codemirror/addon/mode/simple';
 
+import ProseMirror from '../ProseMirror';
 import { fetchContents, storeContents } from '../../actions';
-import { xalgo } from '../../codemirror/modes';
-
-import 'codemirror/lib/codemirror.css';
-// import 'codemirror/theme/material.css';
-
-CodeMirrorInstance.defineSimpleMode("xalgo", xalgo);
 
 class PackageFile extends Component {
   constructor(props) {
@@ -41,18 +33,11 @@ class PackageFile extends Component {
   }
   render() {
     const {contents: {file_content}} = this.props;
-    const options = {
-      lineNumbers: true,
-      // theme: 'material',
-      mode: "xalgo",
-    };
 
     return (
       <div>
-        <CodeMirror
-          value={file_content}
-          options={options}
-          onChange={this.handleChange} />
+        <ProseMirror rule={file_content}></ProseMirror>
+
         <Button variant="raised" color="primary" onClick={this.handleSave}>
           Save
         </Button>
@@ -76,10 +61,6 @@ class PackageFile extends Component {
     const payload = Object.assign({}, contents, {file_content: this.rules});
 
     this.props.storeContents(payload);
-  }
-
-  extractPath() {
-
   }
 }
 

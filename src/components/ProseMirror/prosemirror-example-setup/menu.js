@@ -1,9 +1,15 @@
+/* eslint-disable */
+
 import {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
        selectParentNodeItem, undoItem, redoItem, icons, MenuItem} from "prosemirror-menu"
 import {NodeSelection} from "prosemirror-state"
 import {toggleMark} from "prosemirror-commands"
 import {wrapInList} from "prosemirror-schema-list"
 import {TextField, openPrompt} from "./prompt"
+
+import {Fragment} from "prosemirror-model"
+import {addColumnAfter, addColumnBefore, addRowAfter, addRowBefore, deleteRow, deleteColumn,
+  deleteTable, toggleHeaderColumn, toggleHeaderRow, toggleHeaderCell} from "prosemirror-tables"
 
 // Helpers to create specific types of items
 
@@ -100,6 +106,61 @@ function linkItem(markType) {
 
 function wrapListItem(nodeType, options) {
   return cmdItem(wrapInList(nodeType, options.attrs), options)
+}
+
+function createTable(nodeType, rows, columns, attrs) {
+  attrs = setColumns(attrs, columns)
+
+  let rowType = nodeType.schema.nodes.table_row
+  let cellType = nodeType.schema.nodes.table_cell
+
+  let cell = cellType.createAndFill(), cells = []
+  for (let i = 0; i < columns; i++) cells.push(cell)
+  let row = rowType.create({columns}, Fragment.from(cells)), rowNodes = []
+  for (let i = 0; i < rows; i++) rowNodes.push(row)
+  return nodeType.create(attrs, Fragment.from(rowNodes))
+}
+
+function setColumns(attrs, columns) {
+  let result = Object.create(null)
+  if (attrs) for (let prop in attrs) result[prop] = attrs[prop]
+  result.columns = columns
+  return result
+}
+
+function positiveInteger(value) {
+  if (!/^[1-9]\d*$/.test(value)) { return "Should be a positive integer" }
+}
+
+function insertTableItem(nodeType) {
+  return new MenuItem({
+    title: "Insert a table",
+    run: function run(_, _a, view) {
+      openPrompt({
+        title: "Insert table",
+        fields: {
+          rows: new TextField({label: "Rows", validate: positiveInteger}),
+          cols: new TextField({label: "Columns", validate: positiveInteger})
+        },
+        callback: function callback(ref) {
+          var rows = ref.rows;
+          var cols = ref.cols;
+
+          view.dispatch(view.state.tr.replaceSelectionWith(createTable(nodeType, +rows, +cols)))
+          view.focus()
+        }
+      })
+    },
+    select: function select(state) {
+      var $from = state.selection.$from
+      for (var d = $from.depth; d >= 0; d--) {
+        var index = $from.index(d)
+        if ($from.node(d).canReplaceWith(index, index, nodeType)) { return true }
+      }
+      return false
+    },
+    label: "Table"
+  })
 }
 
 // :: (Schema) → Object
@@ -215,14 +276,38 @@ export function buildMenuItems(schema) {
     })
   }
 
+  if (type = schema.nodes.table) {
+    r.insertTable = insertTableItem(type)
+  }
+  if (type = schema.nodes.table_row) {
+    r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
+    r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
+    r.deleteRow = cmdItem(deleteRow, {title: "Delete row"})
+    r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
+    r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
+    r.deleteColumn = cmdItem(deleteColumn, {title: "Remove column"})
+
+    r.deleteTable = cmdItem(deleteTable, {title: "Delete table"})
+    r.toggleHeaderColumn = cmdItem(toggleHeaderColumn, {title: "Toggle header column"})
+    r.toggleHeaderRow = cmdItem(toggleHeaderRow, {title: "Toggle header row"})
+    r.toggleHeaderCell = cmdItem(toggleHeaderCell, {title: "Toggle header cells"})
+  }
+
   let cut = arr => arr.filter(x => x)
-  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule]), {label: "Insert"})
+  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule, r.insertTable]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
     r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
   ]), {label: "Heading"})]), {label: "Type..."})
+  var tableItems = cut([
+    r.addRowBefore, r.addRowAfter, r.deleteRow, r.addColumnBefore, r.addColumnAfter, r.deleteColumn,
+    r.deleteTable, r.toggleHeaderColumn, r.toggleHeaderRow, r.toggleHeaderCell
+  ])
+  if (tableItems.length) {
+    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
+  }
 
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink])]
-  r.blockMenu = [cut([r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
+  r.blockMenu = [cut([r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
                       liftItem, selectParentNodeItem])]
   r.fullMenu = r.inlineMenu.concat([[r.insertMenu, r.typeMenu]], [[undoItem, redoItem]], r.blockMenu)
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const prefix = "ProseMirror-prompt"
 
 export function openPrompt(options) {

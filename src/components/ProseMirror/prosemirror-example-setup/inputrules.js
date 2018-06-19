@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {inputRules, wrappingInputRule, textblockTypeInputRule,
         smartQuotes, emDash, ellipsis} from "prosemirror-inputrules"
 

@@ -21,7 +21,8 @@ import { EditorState, Selection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema, DOMParser } from "prosemirror-model";
 import { schema as baseSchema } from "prosemirror-schema-basic";
-import { exampleSetup, buildMenuItems } from "./prosemirror-example-setup";
+import {tableNodes}  from "prosemirror-tables"
+import { exampleSetup } from "./prosemirror-example-setup";
 import { keymap } from "prosemirror-keymap";
 import { xalgo } from './modes';
 import CodeBlockView from './CodeBlockView';
@@ -30,18 +31,11 @@ import 'codemirror/addon/mode/simple';
 import 'codemirror/lib/codemirror.css';
 // import 'codemirror/theme/material.css';
 import 'prosemirror-view/style/prosemirror.css';
-import './prosemirror-example-setup/style/style.css';
+import './prosemirror-example-setup/index.css';
 import 'prosemirror-menu/style/menu.css';
 import 'prosemirror-gapcursor/style/gapcursor.css';
-import './index.css';
-
-import { MenuItem, Dropdown } from 'prosemirror-menu';
-
-
-import {addColumnAfter, addColumnBefore, deleteColumn, addRowAfter, addRowBefore, deleteRow,
-  mergeCells, splitCell, setCellAttr, toggleHeaderRow, toggleHeaderColumn, toggleHeaderCell, deleteTable} from "prosemirror-tables"
-import {tableNodes, fixTables}  from "prosemirror-tables"
 import "prosemirror-tables/style/tables.css"
+import './index.css';
 
 
 function arrowHandler(dir) {
@@ -64,34 +58,6 @@ const arrowHandlers = keymap({
   ArrowUp: arrowHandler("up"),
   ArrowDown: arrowHandler("down"),
 });
-
-function createTableMenu(schema) {
-  let menu = buildMenuItems(schema).fullMenu;
-
-  function item(label, cmd) {
-    return new MenuItem({label, select: cmd, run: cmd});
-  }
-
-  let tableMenu = [
-    item("Insert column before", addColumnBefore),
-    item("Insert column after", addColumnAfter),
-    item("Delete column", deleteColumn),
-    item("Insert row before", addRowBefore),
-    item("Insert row after", addRowAfter),
-    item("Delete row", deleteRow),
-    item("Delete table", deleteTable),
-    item("Merge cells", mergeCells),
-    item("Split cell", splitCell),
-    item("Toggle header column", toggleHeaderColumn),
-    item("Toggle header row", toggleHeaderRow),
-    item("Toggle header cells", toggleHeaderCell),
-    item("Make cell green", setCellAttr("background", "#dfd")),
-    item("Make cell not-green", setCellAttr("background", null))
-  ]
-  menu.splice(2, 0, [new Dropdown(tableMenu, {label: "Table"})]);
-
-  return menu;
-}
 
 class ProseMirror extends Component {
   constructor(props) {
@@ -152,22 +118,15 @@ class ProseMirror extends Component {
     const editor = current.getElementsByClassName('editor')[0];
     const content = current.getElementsByClassName('content')[0];
 
-    const menu = createTableMenu(schema);
-
     let state = EditorState.create({
       doc: DOMParser.fromSchema(schema).parse(content),
-      plugins: exampleSetup({schema: schema, menuContent: menu}).concat(arrowHandlers),
+      plugins: exampleSetup({schema: schema}).concat(arrowHandlers),
     });
-    let fix = fixTables(state)
-    if (fix) state = state.apply(fix.setMeta("addToHistory", false))
 
     this.editorView = new EditorView(editor, {
       state,
       nodeViews: {code_block: function (node, view, getPos) { return new CodeBlockView(node, view, getPos); }}
     });
-
-    document.execCommand("enableObjectResizing", false, false)
-    document.execCommand("enableInlineTableEditing", false, false)
   }
 }
 

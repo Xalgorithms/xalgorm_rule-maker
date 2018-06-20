@@ -20,8 +20,9 @@ import CodeMirror from 'codemirror';
 import { EditorState, Selection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema, DOMParser } from "prosemirror-model";
-import { schema } from "prosemirror-schema-basic";
-import { exampleSetup } from "prosemirror-example-setup";
+import { schema as baseSchema } from "prosemirror-schema-basic";
+import {tableNodes}  from "prosemirror-tables"
+import { exampleSetup } from "./prosemirror-example-setup";
 import { keymap } from "prosemirror-keymap";
 import { xalgo } from './modes';
 import CodeBlockView from './CodeBlockView';
@@ -30,9 +31,10 @@ import 'codemirror/addon/mode/simple';
 import 'codemirror/lib/codemirror.css';
 // import 'codemirror/theme/material.css';
 import 'prosemirror-view/style/prosemirror.css';
-import 'prosemirror-example-setup/style/style.css';
+import './prosemirror-example-setup/index.css';
 import 'prosemirror-menu/style/menu.css';
 import 'prosemirror-gapcursor/style/gapcursor.css';
+import "prosemirror-tables/style/tables.css"
 import './index.css';
 
 
@@ -76,30 +78,53 @@ class ProseMirror extends Component {
 
           <pre>WHEN aaa:bbb</pre>
           <p>asdnkasndjksankdnsa andlasndsajn</p>
+
+          <table>
+            <tbody>
+            <tr><th colSpan={3} data-colwidth="100,0,0">Wide header</th></tr>
+            <tr><td>One</td><td>Two</td><td>Three</td></tr>
+            <tr><td>Four</td><td>Five</td><td>Six</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     );
   }
 
   componentDidMount() {
-    const baseNodes = schema.spec.nodes;
-    const schema$1 = new Schema({
-      nodes: baseNodes.update(
+    const baseNodes = baseSchema.spec.nodes;
+
+    let schema = new Schema({
+      nodes: baseNodes
+      .update(
         'code_block',
         Object.assign({}, baseNodes.get('code_block'), {isolating: true})
-      ),
-      marks: schema.spec.marks
-    });
+      )
+      .append(tableNodes({
+        tableGroup: "block",
+        cellContent: "block+",
+        cellAttributes: {
+          background: {
+            default: null,
+            getFromDOM(dom) { return dom.style.backgroundColor || null },
+            setDOMAttr(value, attrs) { if (value) attrs.style = (attrs.style || "") + `background-color: ${value};` }
+          }
+        }
+      })),
+      marks: baseSchema.spec.marks
+    })
 
-    const {current} = this.editorContainer;
+    const { current } = this.editorContainer;
     const editor = current.getElementsByClassName('editor')[0];
     const content = current.getElementsByClassName('content')[0];
 
+    let state = EditorState.create({
+      doc: DOMParser.fromSchema(schema).parse(content),
+      plugins: exampleSetup({schema: schema}).concat(arrowHandlers),
+    });
+
     this.editorView = new EditorView(editor, {
-      state: EditorState.create({
-        doc: DOMParser.fromSchema(schema$1).parse(content),
-        plugins: exampleSetup({schema: schema$1}).concat(arrowHandlers),
-      }),
+      state,
       nodeViews: {code_block: function (node, view, getPos) { return new CodeBlockView(node, view, getPos); }}
     });
   }

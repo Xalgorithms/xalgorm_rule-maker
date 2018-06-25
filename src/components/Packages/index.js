@@ -20,20 +20,22 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import InfoIcon from '@material-ui/icons/Info';
-import FileCopyIcon from '@material-ui/icons/InsertDriveFile';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import FolderIcon from '@material-ui/icons/Folder';
+import FolderOpen from '@material-ui/icons/FolderOpen';
+import IconButton from '@material-ui/core/IconButton';
 
 import { fetchPackages } from '../../actions';
 
 import './index.css';
+
 
 const styles = theme => ({
   root: {
@@ -43,24 +45,21 @@ const styles = theme => ({
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
-  gridList: {
-    width: 700,
-    height: 450,
+  demo: {
+    backgroundColor: theme.palette.background.paper,
   },
-  icon: {
-    color: 'rgba(255, 255, 255, 0.54)',
+  title: {
+    margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
   },
   link: {
     color: '#3f51b5'
   },
-  title: {
-    'text-transform': 'capitalize'
-  }
 });
 
 class Packages extends Component {
   constructor(props) {
     super(props);
+
     this.onPackageClick = this.onPackageClick.bind(this);
   }
   render() {
@@ -68,32 +67,33 @@ class Packages extends Component {
 
     return (
       <div className={classes.root}>
-        <GridList cellHeight={220} className={classes.gridList} cols={2}>
-          {packages.map((p, i) => (
-            <GridListTile key={i}>
-              <List component="nav">
-                {p.files.map((f, i) => (
-                  <ListItem button key={i}>
-                    <ListItemIcon>
-                      <FileCopyIcon />
-                    </ListItemIcon>
-                    <ListItemText inset primary={f.path} />
-                  </ListItem>
-                ))}
-              </List>
-
-              <GridListTileBar
-                title={<span className={classes.title}>{p.path}</span>}
-                subtitle={<a href={p.url} className={classes.link} target="_blank">{p.url}</a>}
-                actionIcon={
-                  <IconButton className={classes.icon} onClick={(e) => this.onPackageClick(p.path)}>
-                    <InfoIcon />
-                  </IconButton>
-                }
-              />
-            </GridListTile>
-          ))}
-        </GridList>
+        <Grid item xs={12} md={6}>
+          <Typography variant="title" className={classes.title}>
+            Packages
+          </Typography>
+          <div className={classes.demo}>
+            <List dense={false}>
+              {packages.map((p, i) => (
+                <ListItem disableGutters={true} key={i}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FolderIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={p.path}
+                    secondary={<a href={p.url} className={classes.link} target="_blank">{p.url}</a>}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton aria-label="Folder open">
+                      <FolderOpen onClick={(e) => this.onPackageClick(p.path)} />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        </Grid>
       </div>
     );
   }

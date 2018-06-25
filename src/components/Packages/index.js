@@ -32,7 +32,9 @@ import FolderIcon from '@material-ui/icons/Folder';
 import FolderOpen from '@material-ui/icons/FolderOpen';
 import IconButton from '@material-ui/core/IconButton';
 
-import { fetchPackages } from '../../actions';
+import AddPackage from '../AddPackage';
+
+import { fetchPackages, newPackage } from '../../actions';
 
 import './index.css';
 
@@ -54,6 +56,11 @@ const styles = theme => ({
   link: {
     color: '#3f51b5'
   },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+  },
 });
 
 class Packages extends Component {
@@ -61,6 +68,7 @@ class Packages extends Component {
     super(props);
 
     this.onPackageClick = this.onPackageClick.bind(this);
+    this.onPackageAdd = this.onPackageAdd.bind(this);
   }
   render() {
     const { packages, classes } = this.props;
@@ -94,6 +102,8 @@ class Packages extends Component {
             </List>
           </div>
         </Grid>
+
+        <AddPackage onPackageAdd={this.onPackageAdd} />
       </div>
     );
   }
@@ -108,10 +118,15 @@ class Packages extends Component {
       pathname: `/editor/${path}`,
     })
   }
+
+  onPackageAdd(name) {
+    this.props.newPackage(name);
+  }
 }
 
 Packages.propTypes = {
   fetchPackages: PropTypes.func.isRequired,
+  newPackage: PropTypes.func.isRequired,
   packages: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
@@ -125,7 +140,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPackages: () => dispatch(fetchPackages())
+    fetchPackages: () => dispatch(fetchPackages()),
+    newPackage: (name) => dispatch(newPackage(name))
   };
 };
 

@@ -23,6 +23,19 @@ export function fetchPackages() {
   .then(response => response.json())
 };
 
+export function newPackage(name) {
+  return fetch(`${API}/package`, {
+    method: 'POST',
+    body: JSON.stringify({
+      name
+    }),
+    headers:{
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+}
+
 export function fetchEditorState(id) {
   return fetch(`${API}/state/${id}`, {
     method: 'GET',

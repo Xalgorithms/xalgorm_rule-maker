@@ -28,6 +28,17 @@ export function fetchPackages() {
   };
 };
 
+export function newPackage(name) {
+  return (dispatch) => {
+    api.newPackage(name).then((data) => {
+      dispatch({
+        type: types.PACKAGE_CREATED,
+        data,
+      });
+    });
+  };
+};
+
 export function fetchEditorState(id) {
   return (dispatch) => {
     api.fetchEditorState(id).then((data) => {

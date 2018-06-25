@@ -53,6 +53,7 @@ class Header extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
@@ -66,7 +67,7 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              Title
+              Xalgo Authoring
             </Typography>
             {auth && (
               <div>

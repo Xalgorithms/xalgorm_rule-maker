@@ -64,12 +64,21 @@ const styles = theme => ({
 });
 
 class Packages extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onPackageClick = this.onPackageClick.bind(this);
-    this.onPackageAdd = this.onPackageAdd.bind(this);
+  onPackageClick = (path) => {
+    const { history } = this.props;
+    history.push({
+      pathname: `/editor/${path}`,
+    })
   }
+
+  onPackageAdd = (name) => {
+    this.props.newPackage(name);
+  }
+
+  componentDidMount() {
+    this.props.fetchPackages();
+  }
+
   render() {
     const { packages, classes } = this.props;
 
@@ -106,21 +115,6 @@ class Packages extends Component {
         <AddPackage onPackageAdd={this.onPackageAdd} />
       </div>
     );
-  }
-
-  componentDidMount() {
-    this.props.fetchPackages();
-  }
-
-  onPackageClick(path) {
-    const { history } = this.props;
-    history.push({
-      pathname: `/editor/${path}`,
-    })
-  }
-
-  onPackageAdd(name) {
-    this.props.newPackage(name);
   }
 }
 

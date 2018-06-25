@@ -23,6 +23,9 @@ function packageReducer(state = INITIAL_STATE, action) {
     case types.PACKAGES_FETCHED: {
       return [...action.data];
     }
+    case types.PACKAGE_CREATED: {
+      return [...action.data];
+    }
     default: return state;
   }
 }

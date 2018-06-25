@@ -28,22 +28,33 @@ export function fetchPackages() {
   };
 };
 
-export function fetchContents(path) {
+export function newPackage(name) {
   return (dispatch) => {
-    api.fetchContents(path).then((data) => {
+    api.newPackage(name).then((data) => {
       dispatch({
-        type: types.CONTENTS_FETCHED,
+        type: types.PACKAGE_CREATED,
         data,
       });
     });
   };
 };
 
-export function storeContents(payload) {
+export function fetchEditorState(id) {
   return (dispatch) => {
-    api.storeContents(payload).then((data) => {
+    api.fetchEditorState(id).then((data) => {
       dispatch({
-        type: types.CONTENTS_STORED,
+        type: types.EDITOR_STATE_FETCHED,
+        data,
+      });
+    });
+  };
+}
+
+export function saveEditorState(id, payload) {
+  return (dispatch) => {
+    api.saveEditorState(id, payload).then((data) => {
+      dispatch({
+        type: types.EDITOR_STATE_STORED,
         data,
       });
     });

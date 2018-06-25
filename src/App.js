@@ -23,7 +23,7 @@ import { Route, Switch } from 'react-router';
 
 import Header from './components/Header';
 import Packages from './components/Packages';
-import PackageFile from './components/PackageFile';
+import PackageEditor from './components/PackageEditor';
 
 import './App.css';
 
@@ -43,8 +43,8 @@ class App extends Component {
         <Paper>
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Switch>
-              <Route path={"/"} exact component={ Packages } />
-              <Route path={"/file"} component={ PackageFile } />
+              <Route path={'/'} exact component={ Packages } />
+              <Route path={'/editor/:name'} component={ PackageEditor } />
             </Switch>
           </BrowserRouter>
         </Paper>

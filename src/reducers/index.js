@@ -17,11 +17,11 @@
 import { combineReducers } from 'redux';
 
 import packageReducer from './package';
-import contentsReducer from './contents';
+import editorStateReducer from './editorState';
 
 const rootReducer = combineReducers({
   packages: packageReducer,
-  contents: contentsReducer,
+  editorState: editorStateReducer,
 });
 
 export default rootReducer;

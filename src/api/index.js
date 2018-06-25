@@ -23,17 +23,34 @@ export function fetchPackages() {
   .then(response => response.json())
 };
 
-export function fetchContents(path) {
-  return fetch(`${API}/contents?path=${path}`, {
+export function newPackage(name) {
+  return fetch(`${API}/package`, {
+    method: 'POST',
+    body: JSON.stringify({
+      name
+    }),
+    headers:{
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+}
+
+export function fetchEditorState(id) {
+  return fetch(`${API}/state/${id}`, {
     method: 'GET',
+    headers:{
+      'Content-Type': 'application/json'
+    },
   })
   .then(response => response.json())
 };
 
-export function storeContents(payload) {
-  return fetch(`${API}/contents`, {
+export function saveEditorState(id, payload) {
+  return fetch(`${API}/state`, {
     method: 'POST',
     body: JSON.stringify({
+      id,
       payload
     }),
     headers:{
@@ -42,5 +59,3 @@ export function storeContents(payload) {
   })
   .then(response => response.json())
 };
-
-

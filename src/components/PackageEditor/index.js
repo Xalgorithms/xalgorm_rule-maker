@@ -19,72 +19,61 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router'
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 
 import ProseMirror from '../ProseMirror';
-import { fetchContents, storeContents } from '../../actions';
+import { fetchEditorState, saveEditorState } from '../../actions';
 
-class PackageFile extends Component {
+class PackageEditor extends Component {
   constructor(props) {
     super(props);
-    this.rules = props.contents;
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSave = this.handleSave.bind(this);
+
+    this.handleSaveEditorState = this.handleSaveEditorState.bind(this);
   }
   render() {
-    const {contents: {file_content}} = this.props;
+    const { editorState } = this.props;
 
     return (
       <div>
-        <ProseMirror rule={file_content}></ProseMirror>
-
-        <Button variant="raised" color="primary" onClick={this.handleSave}>
-          Save
-        </Button>
+        <ProseMirror editorStateJson={editorState} onSave={this.handleSaveEditorState()}></ProseMirror>
       </div>
     );
   }
 
   componentDidMount() {
-    const { location: { search } } = this.props;
-    const path =  new URLSearchParams(search).get('path');
+    const { match: { params: { name } } } = this.props;
 
-    this.props.fetchContents(path);
+    this.props.fetchEditorState(name);
   }
 
-  handleChange(editor, data, value) {
-    this.rules = value;
-  }
+  handleSaveEditorState() {
+    const { match: { params: { name: id } } } = this.props;
 
-  handleSave() {
-    const {contents} = this.props;
-    const payload = Object.assign({}, contents, {file_content: this.rules});
-
-    this.props.storeContents(payload);
+    return (payload) => {
+      this.props.saveEditorState(id, payload);
+    }
   }
 }
 
-PackageFile.propTypes = {
-  contents: PropTypes.object.isRequired,
+PackageEditor.propTypes = {
+  editorState: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  fetchContents: PropTypes.func.isRequired,
-  storeContents: PropTypes.func.isRequired,
+  saveEditorState: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { contents } = state;
+  const { editorState } = state;
 
-  return { contents };
+  return { editorState };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchContents: (path) => dispatch(fetchContents(path)),
-    storeContents: (payload) => dispatch(storeContents(payload)),
+    fetchEditorState: (id) => dispatch(fetchEditorState(id)),
+    saveEditorState: (id, payload) => dispatch(saveEditorState(id, payload)),
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
-)(PackageFile);
+)(PackageEditor);

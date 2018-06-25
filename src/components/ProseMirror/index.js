@@ -24,6 +24,7 @@ import { schema as baseSchema } from "prosemirror-schema-basic";
 import {tableNodes}  from "prosemirror-tables"
 import { exampleSetup } from "./prosemirror-example-setup";
 import { keymap } from "prosemirror-keymap";
+import Button from '@material-ui/core/Button';
 import { xalgo } from './modes';
 import CodeBlockView from './CodeBlockView';
 import 'codemirror/addon/mode/simple';
@@ -65,36 +66,15 @@ class ProseMirror extends Component {
 
     CodeMirror.defineSimpleMode("xalgo", xalgo);
 
-    this.editorContainer = React.createRef();
     this.editorView = null;
-  }
-  render() {
-    return(
-      <div className="code_editor" ref={this.editorContainer}>
-        <div className="editor"></div>
-        <div className="content" style={{display: 'none'}}>
-          <h3>Test Xalgorithms rules</h3>
-          <p>Test</p>
+    this.editorContainer = React.createRef();
 
-          <pre>WHEN aaa:bbb</pre>
-          <p>asdnkasndjksankdnsa andlasndsajn</p>
+    this.handleSave = this.handleSave.bind(this);
+    this.createEditorView = this.createEditorView.bind(this);
 
-          <table>
-            <tbody>
-            <tr><th colSpan={3} data-colwidth="100,0,0">Wide header</th></tr>
-            <tr><td>One</td><td>Two</td><td>Three</td></tr>
-            <tr><td>Four</td><td>Five</td><td>Six</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
-
-  componentDidMount() {
+    // Define schema with custom code editor(CodeMirror) and table editing
     const baseNodes = baseSchema.spec.nodes;
-
-    let schema = new Schema({
+    this.schema = new Schema({
       nodes: baseNodes
       .update(
         'code_block',
@@ -113,25 +93,63 @@ class ProseMirror extends Component {
       })),
       marks: baseSchema.spec.marks
     })
+  }
 
+  render() {
+    return (
+      <div>
+        <div className="code_editor" ref={this.editorContainer}>
+          <div className="editor"></div>
+          <div className="content" style={{display: 'none'}}></div>
+        </div>
+        <Button variant="raised" color="primary" onClick={this.handleSave}>
+          Save
+        </Button>
+      </div>
+    );
+  }
+
+  handleSave() {
+    this.props.onSave(this.editorView.state.toJSON());
+  }
+
+  createEditorView() {
     const { current } = this.editorContainer;
+    const { editorStateJson } = this.props;
+    const { schema } = this;
     const editor = current.getElementsByClassName('editor')[0];
     const content = current.getElementsByClassName('content')[0];
 
-    let state = EditorState.create({
-      doc: DOMParser.fromSchema(schema).parse(content),
-      plugins: exampleSetup({schema: schema}).concat(arrowHandlers),
-    });
+    const plugins = exampleSetup({schema}).concat(arrowHandlers);
+
+    let editorState = null;
+    // Check if initial state is provided
+    if (!Object.keys(editorStateJson).length) {
+      editorState = EditorState.create({
+        doc: DOMParser.fromSchema(schema).parse(content),
+        plugins,
+      });
+    } else {
+      editorState = EditorState.fromJSON({
+        schema,
+        plugins
+      }, editorStateJson);
+    }
 
     this.editorView = new EditorView(editor, {
-      state,
+      state: editorState,
       nodeViews: {code_block: function (node, view, getPos) { return new CodeBlockView(node, view, getPos); }}
     });
+  }
+
+  componentDidUpdate() {
+    this.createEditorView();
   }
 }
 
 ProseMirror.propTypes = {
-  rule: PropTypes.string,
+  editorStateJson: PropTypes.object,
+  onSave: PropTypes.func,
 };
 
 export default ProseMirror

@@ -61,7 +61,7 @@ const styles = theme => ({
 class Packages extends Component {
   constructor(props) {
     super(props);
-    this.onFileClick = this.onFileClick.bind(this);
+    this.onPackageClick = this.onPackageClick.bind(this);
   }
   render() {
     const { packages, classes } = this.props;
@@ -73,7 +73,7 @@ class Packages extends Component {
             <GridListTile key={i}>
               <List component="nav">
                 {p.files.map((f, i) => (
-                  <ListItem button key={i} onClick={(e) => this.onFileClick(f.path)}>
+                  <ListItem button key={i}>
                     <ListItemIcon>
                       <FileCopyIcon />
                     </ListItemIcon>
@@ -86,7 +86,7 @@ class Packages extends Component {
                 title={<span className={classes.title}>{p.path}</span>}
                 subtitle={<a href={p.url} className={classes.link} target="_blank">{p.url}</a>}
                 actionIcon={
-                  <IconButton className={classes.icon}>
+                  <IconButton className={classes.icon} onClick={(e) => this.onPackageClick(p.path)}>
                     <InfoIcon />
                   </IconButton>
                 }
@@ -102,9 +102,11 @@ class Packages extends Component {
     this.props.fetchPackages();
   }
 
-  onFileClick(path) {
+  onPackageClick(path) {
     const { history } = this.props;
-    history.push(`/file?path=${path}`)
+    history.push({
+      pathname: `/editor/${path}`,
+    })
   }
 }
 

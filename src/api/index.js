@@ -14,17 +14,17 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-const API = process.env.REACT_APP_API;
+import { API_URL } from '../config';
 
 export function fetchPackages() {
-  return fetch(`${API}/package`, {
+  return fetch(`${API_URL}/package`, {
     method: 'GET',
   })
   .then(response => response.json())
 };
 
 export function newPackage(name) {
-  return fetch(`${API}/package`, {
+  return fetch(`${API_URL}/package`, {
     method: 'POST',
     body: JSON.stringify({
       name
@@ -37,7 +37,7 @@ export function newPackage(name) {
 }
 
 export function fetchEditorState(id) {
-  return fetch(`${API}/state/${id}`, {
+  return fetch(`${API_URL}/state/${id}`, {
     method: 'GET',
     headers:{
       'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export function fetchEditorState(id) {
 };
 
 export function saveEditorState(id, payload) {
-  return fetch(`${API}/state`, {
+  return fetch(`${API_URL}/state`, {
     method: 'POST',
     body: JSON.stringify({
       id,

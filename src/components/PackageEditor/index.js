@@ -24,11 +24,6 @@ import ProseMirror from '../ProseMirror';
 import { fetchEditorState, saveEditorState } from '../../actions';
 
 class PackageEditor extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleSaveEditorState = this.handleSaveEditorState.bind(this);
-  }
   render() {
     const { editorState } = this.props;
 
@@ -40,16 +35,16 @@ class PackageEditor extends Component {
   }
 
   componentDidMount() {
-    const { match: { params: { name } } } = this.props;
+    const { match: { params: { owner, repo, name } } } = this.props;
 
-    this.props.fetchEditorState(name);
+    this.props.fetchEditorState(owner, repo, name);
   }
 
-  handleSaveEditorState() {
-    const { match: { params: { name: id } } } = this.props;
+  handleSaveEditorState = () => {
+    const { match: { params: { name: id, owner, repo } } } = this.props;
 
     return (payload) => {
-      this.props.saveEditorState(id, payload);
+      this.props.saveEditorState(owner, repo, id, payload);
     }
   }
 }
@@ -68,8 +63,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchEditorState: (id) => dispatch(fetchEditorState(id)),
-    saveEditorState: (id, payload) => dispatch(saveEditorState(id, payload)),
+    fetchEditorState: (owner, repo, id) => dispatch(fetchEditorState(owner, repo, id)),
+    saveEditorState: (owner, repo, id, payload) => dispatch(saveEditorState(owner, repo, id, payload)),
   };
 };
 

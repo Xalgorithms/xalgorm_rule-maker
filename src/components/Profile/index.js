@@ -14,16 +14,24 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-import { combineReducers } from 'redux';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
-import packageReducer from './package';
-import editorStateReducer from './editorState';
-import repoReducer from './repo';
+class Profile extends Component {
+  render() {
+    return (
+      <Paper>
+        Hello there
+      </Paper>
+    );
+  }
+}
 
-const rootReducer = combineReducers({
-  packages: packageReducer,
-  editorState: editorStateReducer,
-  repos: repoReducer,
-});
+Profile.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-export default rootReducer;
+// export default withStyles(styles)(Profile);
+export default Profile;

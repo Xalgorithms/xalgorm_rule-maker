@@ -15,7 +15,9 @@
 // permissions and limitations under the License.
 
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -52,6 +54,14 @@ class Header extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleProfile = () => {
+    const { history } = this.props;
+    history.push({
+      pathname: '/profile',
+    })
+    this.handleClose();
   };
 
   render() {
@@ -93,7 +103,7 @@ class Header extends Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={this.handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
                 </Menu>
               </div>
@@ -109,4 +119,7 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+export default compose(
+  withStyles(styles),
+  withRouter,
+)(Header);

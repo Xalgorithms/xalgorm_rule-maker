@@ -16,17 +16,19 @@
 
 import { API_URL } from '../config';
 
-export function fetchPackages() {
-  return fetch(`${API_URL}/package`, {
+export function fetchPackages(owner, repo) {
+  return fetch(`${API_URL}/package/owner/${owner}/repo/${repo}`, {
     method: 'GET',
   })
   .then(response => response.json())
 };
 
-export function newPackage(name) {
+export function newPackage(owner, repo, name) {
   return fetch(`${API_URL}/package`, {
     method: 'POST',
     body: JSON.stringify({
+      owner,
+      repo,
       name
     }),
     headers:{
@@ -36,7 +38,7 @@ export function newPackage(name) {
   .then(response => response.json())
 }
 
-export function fetchEditorState(id) {
+export function fetchEditorState(owner, repo, id) {
   return fetch(`${API_URL}/state/${id}`, {
     method: 'GET',
     headers:{
@@ -46,13 +48,25 @@ export function fetchEditorState(id) {
   .then(response => response.json())
 };
 
-export function saveEditorState(id, payload) {
+export function saveEditorState(owner, repo, id, payload) {
   return fetch(`${API_URL}/state`, {
     method: 'POST',
     body: JSON.stringify({
+      owner,
+      repo,
       id,
       payload
     }),
+    headers:{
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => response.json())
+};
+
+export function fetchRepos() {
+  return fetch(`${API_URL}/repository`, {
+    method: 'GET',
     headers:{
       'Content-Type': 'application/json'
     },

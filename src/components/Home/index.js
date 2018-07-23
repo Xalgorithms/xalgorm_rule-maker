@@ -20,6 +20,7 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -32,12 +33,7 @@ import FolderIcon from '@material-ui/icons/Folder';
 import FolderOpen from '@material-ui/icons/FolderOpen';
 import IconButton from '@material-ui/core/IconButton';
 
-import AddPackage from '../AddPackage';
-
-import { fetchPackages, newPackage } from '../../actions';
-
-import './index.css';
-
+import { fetchRepos } from '../../actions';
 
 const styles = theme => ({
   root: {
@@ -47,53 +43,43 @@ const styles = theme => ({
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  title: {
-    margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
-  },
   link: {
     color: '#3f51b5'
   },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
-  },
 });
 
-class Packages extends Component {
-  onPackageClick = (path) => {
-    const { history, match: { params: { owner, repo } } } = this.props;
+class Home extends Component {
+  onRepoClick = (repo, owner) => {
+    const { history } = this.props;
     history.push({
-      pathname: `/owner/${owner}/repo/${repo}/package/${path}`,
+      pathname: `/owner/${owner}/repo/${repo}`,
     })
   }
 
-  onPackageAdd = (name) => {
-    const { match: { params: { owner, repo } } } = this.props;
-
-    this.props.newPackage(owner, repo, name);
-  }
-
   componentDidMount() {
-    const { match: { params: { owner, repo } } } = this.props;
-    this.props.fetchPackages(owner, repo);
+    this.props.fetchRepos();
   }
 
   render() {
-    const { packages, classes } = this.props;
+    const { classes, repos } = this.props;
+    console.log(this.props);
+    if (!repos) {
+      return (
+        <Paper className={classes.root}>
+          Activate github app
+        </Paper>
+      );
+    }
 
     return (
-      <div className={classes.root}>
+      <Paper className={classes.root}>
         <Grid item xs={12} md={6}>
-          <Typography variant="title" className={classes.title}>
-            Packages
+          <Typography variant="title">
+            Repositories
           </Typography>
-          <div className={classes.demo}>
+          <div>
             <List dense={false}>
-              {packages.map((p, i) => (
+              {repos.map((r, i) => (
                 <ListItem disableGutters={true} key={i}>
                   <ListItemAvatar>
                     <Avatar>
@@ -101,12 +87,12 @@ class Packages extends Component {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={p.path}
-                    secondary={<a href={p.url} className={classes.link} target="_blank">{p.url}</a>}
+                    primary={r.name}
+                    secondary={<a href={r.html_url} className={classes.link} target="_blank">{r.html_url}</a>}
                   />
                   <ListItemSecondaryAction>
                     <IconButton aria-label="Folder open">
-                      <FolderOpen onClick={(e) => this.onPackageClick(p.path)} />
+                      <FolderOpen onClick={(e) => this.onRepoClick(r.name, r.owner.login)} />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -114,31 +100,24 @@ class Packages extends Component {
             </List>
           </div>
         </Grid>
-
-        <AddPackage onPackageAdd={this.onPackageAdd} />
-      </div>
-    );
+      </Paper>
+    )
   }
 }
 
-Packages.propTypes = {
-  fetchPackages: PropTypes.func.isRequired,
-  newPackage: PropTypes.func.isRequired,
-  packages: PropTypes.array.isRequired,
+Home.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { packages } = state;
+  const { repos } = state;
 
-  return { packages };
+  return { repos };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPackages: (owner, repo) => dispatch(fetchPackages(owner, repo)),
-    newPackage: (owner, repo, name) => dispatch(newPackage(owner, repo, name))
+    fetchRepos: () => dispatch(fetchRepos()),
   };
 };
 
@@ -146,4 +125,5 @@ export default compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter,
-)(Packages);
+)(Home);
+

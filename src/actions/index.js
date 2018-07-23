@@ -17,9 +17,9 @@
 import * as api from '../api';
 import * as types from '../constants/types';
 
-export function fetchPackages() {
+export function fetchPackages(owner, repo) {
   return (dispatch) => {
-    api.fetchPackages().then((data) => {
+    api.fetchPackages(owner, repo).then((data) => {
       dispatch({
         type: types.PACKAGES_FETCHED,
         data,
@@ -28,9 +28,9 @@ export function fetchPackages() {
   };
 };
 
-export function newPackage(name) {
+export function newPackage(owner, repo, name) {
   return (dispatch) => {
-    api.newPackage(name).then((data) => {
+    api.newPackage(owner, repo, name).then((data) => {
       dispatch({
         type: types.PACKAGE_CREATED,
         data,
@@ -39,9 +39,9 @@ export function newPackage(name) {
   };
 };
 
-export function fetchEditorState(id) {
+export function fetchEditorState(owner, repo, id) {
   return (dispatch) => {
-    api.fetchEditorState(id).then((data) => {
+    api.fetchEditorState(owner, repo, id).then((data) => {
       dispatch({
         type: types.EDITOR_STATE_FETCHED,
         data,
@@ -50,9 +50,9 @@ export function fetchEditorState(id) {
   };
 }
 
-export function saveEditorState(id, payload) {
+export function saveEditorState(owner, repo, id, payload) {
   return (dispatch) => {
-    api.saveEditorState(id, payload).then((data) => {
+    api.saveEditorState(owner, repo, id, payload).then((data) => {
       dispatch({
         type: types.EDITOR_STATE_STORED,
         data,
@@ -60,3 +60,15 @@ export function saveEditorState(id, payload) {
     });
   };
 };
+
+export function fetchRepos() {
+  return (dispatch) => {
+    api.fetchRepos().then((data) => {
+      dispatch({
+        type: types.REPOS_FETCHED,
+        data,
+      });
+    });
+  };
+};
+

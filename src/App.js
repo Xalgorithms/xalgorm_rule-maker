@@ -22,8 +22,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
 import Header from './components/Header';
-import Packages from './components/Packages';
+import Home from './components/Home';
 import PackageEditor from './components/PackageEditor';
+import Profile from './components/Profile';
+import Packages from './components/Packages';
 
 import './App.css';
 
@@ -39,15 +41,17 @@ class App extends Component {
 
     return (
       <div className={classes.root}>
-        <Header />
-        <Paper>
-          <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <Paper>
+            <Header />
             <Switch>
-              <Route path={'/'} exact component={ Packages } />
-              <Route path={'/editor/:name'} component={ PackageEditor } />
+              <Route path={'/'} exact component={ Home } />
+              <Route path={'/owner/:owner/repo/:repo/package/:name'} component={ PackageEditor } />
+              <Route path={'/profile'} component={ Profile } />
+              <Route path={'/owner/:owner/repo/:repo'} component={ Packages } />
             </Switch>
-          </BrowserRouter>
-        </Paper>
+          </Paper>
+        </BrowserRouter>
       </div>
     );
   }
